@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { GameContext } from '../contexts/GameContext.jsx'; // Updated import path
 import Hexagon from './Hexagon.jsx';
 
-const GameBoard = ({ board, onHexagonClick }) => {
+const GameBoard = () => {
+  const { board, handleHexagonClick } = useContext(GameContext);
+
   // Define the honeycomb structure
   const rows = [
     [0, 1, 2, 3], // Top row: 4 hexagons
@@ -33,7 +36,7 @@ const GameBoard = ({ board, onHexagonClick }) => {
             <Hexagon
               key={hexIndex}
               letter={board[hexIndex]}
-              onClick={() => onHexagonClick(hexIndex)}
+              onClick={() => handleHexagonClick(hexIndex)}
               row={rowIndex}
               col={colIndex}
               rowOffset={rowOffset} // Pass the rowOffset to the Hexagon component
