@@ -8,6 +8,10 @@ const Hexagon = ({ letter, onClick, row, col }) => {
   const isFirstOrLastRow = row === 0 || row === 4;
   const centeringOffset = isFirstOrLastRow ? 100 : 0;
 
+  // Define alternating shades of blue
+  const blueShades = ['bg-blue-200', 'bg-blue-300'];
+  const colorClass = blueShades[(row + col) % 2]; // Ensure alternating colors
+
   const style = {
     position: 'absolute',
     left: `${col * 100 + offset + centeringOffset}px`, // Adjust horizontal position
@@ -16,7 +20,7 @@ const Hexagon = ({ letter, onClick, row, col }) => {
 
   return (
     <div
-      className="hexagon bg-blue-200 text-black flex items-center justify-center cursor-pointer"
+      className={`hexagon ${colorClass} text-black flex items-center justify-center cursor-pointer`}
       style={style}
       onClick={onClick}
     >

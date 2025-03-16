@@ -24,6 +24,4 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #a3d8f4; /* Light blue */
-  border: 1px solid #000; /* Optional: Add borders for better visibility */
 }
