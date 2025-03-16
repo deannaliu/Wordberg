@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { GameContext } from '../contexts/GameContext.jsx'; // Updated import path
+import { GameContext } from '../contexts/GameContext.jsx'; 
 import Hexagon from './Hexagon.jsx';
 
 const GameBoard = () => {
