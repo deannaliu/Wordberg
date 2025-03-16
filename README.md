@@ -1,5 +1,6 @@
 # Wordberg
 
+```
 cd frontend
 create front end react app: 
     npx create-react-app .
@@ -13,3 +14,5 @@ npm install react-router-dom
 npm install websocket
 
 npm start (to start the front end)
+
+```
