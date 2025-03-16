@@ -21,7 +21,9 @@ const App = () => {
   return (
     <div className="App">
       <h1 className="text-3xl font-bold text-center my-4">Wordberg</h1>
-      <GameBoard board={board} onHexagonClick={handleHexagonClick} />
+      <div className="flex justify-center">
+        <GameBoard board={board} onHexagonClick={handleHexagonClick} />
+      </div>
     </div>
   );
 };

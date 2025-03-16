@@ -11,10 +11,20 @@ const GameBoard = ({ board, onHexagonClick }) => {
     [20, 21, 22, 23], // Bottom row: 4 hexagons
   ];
 
+  // Calculate the maximum number of hexagons in a row
+  const maxHexagonsInRow = Math.max(...rows.map(row => row.length));
+
+  // Calculate the total width of the game board
+  const hexagonWidth = 100; // Width of each hexagon
+  const totalWidth = maxHexagonsInRow * hexagonWidth;
+
   return (
-    <div className="game-board relative" style={{ width: '700px', height: '500px' }}>
-      {rows.map((row, rowIndex) =>
-        row.map((hexIndex, colIndex) => {
+    <div className="game-board relative" style={{ width: `${totalWidth}px`, height: '500px', margin: '0 auto' }}>
+      {rows.map((row, rowIndex) => {
+        // Calculate the horizontal offset to center the row
+        const rowOffset = ((maxHexagonsInRow - row.length) * hexagonWidth) / 2;
+
+        return row.map((hexIndex, colIndex) => {
           // Ensure the hexIndex is within the bounds of the board array
           if (hexIndex >= board.length) {
             return null; // Skip rendering if the index is out of bounds
@@ -26,10 +36,11 @@ const GameBoard = ({ board, onHexagonClick }) => {
               onClick={() => onHexagonClick(hexIndex)}
               row={rowIndex}
               col={colIndex}
+              rowOffset={rowOffset} // Pass the rowOffset to the Hexagon component
             />
           );
-        })
-      )}
+        });
+      })}
     </div>
   );
 };
