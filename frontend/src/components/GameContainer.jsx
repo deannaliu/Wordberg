@@ -5,22 +5,27 @@ import ResetButton from './ResetButton';
 const GameContainer = ({ initialPlayers, setPlayers }) => {
   // handleLetterSelect is used to update the players state with the selected letter and its position
   const handleLetterSelect = (letter, hexIndex) => {
-    setPlayers(prev => ({
-      player1: {
-        ...prev.player1,
-        selectedLetters: prev.player1.isCurrentTurn 
-          ? [...prev.player1.selectedLetters, { letter, position: hexIndex }]
-          : prev.player1.selectedLetters,
-        isCurrentTurn: !prev.player1.isCurrentTurn
-      },
-      player2: {
-        ...prev.player2,
-        selectedLetters: prev.player2.isCurrentTurn 
-          ? [...prev.player2.selectedLetters, { letter, position: hexIndex }]
-          : prev.player2.selectedLetters,
-        isCurrentTurn: !prev.player2.isCurrentTurn
+    setPlayers(prev => {
+      const currentPlayer = prev.player1.isCurrentTurn ? 'player1' : 'player2';
+      const otherPlayer = currentPlayer === 'player1' ? 'player2' : 'player1';
+      
+      // Log when a player reaches 7 letters
+      if (letter && prev[currentPlayer].selectedLetters.length === 6) {
+        console.log(`${prev[currentPlayer].name} is about to reach their maximum of 7 letters!`);
       }
-    }));
+      
+      return {
+        [currentPlayer]: {
+          ...prev[currentPlayer],
+          selectedLetters: letter ? [...prev[currentPlayer].selectedLetters, { letter, position: hexIndex }] : prev[currentPlayer].selectedLetters,
+          isCurrentTurn: false
+        },
+        [otherPlayer]: {
+          ...prev[otherPlayer],
+          isCurrentTurn: true
+        }
+      };
+    });
   };
 
   return (

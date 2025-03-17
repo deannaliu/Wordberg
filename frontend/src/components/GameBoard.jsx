@@ -22,9 +22,17 @@ const GameBoard = ({ players, onLetterSelect }) => {
   const totalWidth = maxHexagonsInRow * hexagonWidth;
 
   const handleClick = (row, col, letter, hexIndex) => {
-    if (!selectedHexagons.has(hexIndex)) {  // Only handle click if hexagon hasn't been selected
-      contextHandleClick(row, col, letter, hexIndex);
-      onLetterSelect(letter);
+    // Check if current player has reached their limit
+    const currentPlayer = players.player1.isCurrentTurn ? players.player1 : players.player2;
+    if (!selectedHexagons.has(hexIndex)) {
+      if (currentPlayer.selectedLetters.length < 7) {
+        contextHandleClick(row, col, letter, hexIndex);
+        onLetterSelect(letter);
+      } else {
+        console.log(`${currentPlayer.name} has reached their maximum of 7 letters!`);
+        // If player has 7 letters, just switch turns
+        onLetterSelect(null);
+      }
     }
   };
 
