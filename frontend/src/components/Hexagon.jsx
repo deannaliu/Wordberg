@@ -8,14 +8,17 @@ const Hexagon = ({ letter, onClick, row, col }) => {
   const isFirstOrLastRow = row === 0 || row === 4;
   const centeringOffset = isFirstOrLastRow ? 100 : 0;
 
+  // Calculate spacing gap (2px) only for middle hexagons
+  const spacingGap = col === 0 ? 0 : (col * 2); // 2px gap for each hexagon after the first
+
   // Define alternating shades of blue
   const blueShades = ['bg-blue-200', 'bg-blue-300'];
-  const colorClass = blueShades[(row + col) % 2]; // Ensure alternating colors
+  const colorClass = blueShades[(row + col) % 2];
 
   const style = {
     position: 'absolute',
-    left: `${col * 100 + offset + centeringOffset}px`, // Adjust horizontal position
-    top: `${row * 85}px`, // Adjust vertical position
+    left: `${(col * 100) + spacingGap + offset + centeringOffset}px`,
+    top: `${row * 85}px`,
   };
 
   return (
