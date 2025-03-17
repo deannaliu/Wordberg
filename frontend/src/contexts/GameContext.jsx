@@ -52,18 +52,31 @@ const generateBoard = () => {
 
 // Create the provider component
 export const GameProvider = ({ children }) => {
-  const [board, setBoard] = useState(generateBoard()); // Initialize the board
+  const [board, setBoard] = useState(generateBoard());
+  const [selectedHexagons, setSelectedHexagons] = useState(new Set());
 
-  const handleHexagonClick = (index) => {
-    console.log(`Hexagon ${index} clicked`);
-    // Add logic to remove the hexagon and update the board
+  const handleHexagonClick = (row, col, letter, index) => {
+    console.log(`Hexagon ${index} clicked with letter ${letter}`);
+    
+    // Mark hexagon as selected
+    setSelectedHexagons(prev => {
+      const newSelected = new Set(prev);
+      newSelected.add(index);
+      return newSelected;
+    });
+
+    // Update the board
     const newBoard = [...board];
-    newBoard[index] = ''; // Remove the letter from the board
+    newBoard[index] = null; // Use null instead of empty string
     setBoard(newBoard);
   };
 
   return (
-    <GameContext.Provider value={{ board, handleHexagonClick }}>
+    <GameContext.Provider value={{ 
+      board, 
+      handleHexagonClick,
+      selectedHexagons 
+    }}>
       {children}
     </GameContext.Provider>
   );

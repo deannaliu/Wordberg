@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { GameContext } from '../contexts/GameContext.jsx'; 
 import Hexagon from './Hexagon.jsx';
 
-const GameBoard = () => {
-  const { board, handleHexagonClick } = useContext(GameContext);
+const GameBoard = ({ players, onLetterSelect }) => {
+  const { board, handleHexagonClick: contextHandleClick, selectedHexagons } = useContext(GameContext);
 
   // Define the honeycomb structure
   const rows = [
@@ -21,6 +21,13 @@ const GameBoard = () => {
   const hexagonWidth = 100; // Width of each hexagon
   const totalWidth = maxHexagonsInRow * hexagonWidth;
 
+  const handleClick = (row, col, letter, hexIndex) => {
+    if (!selectedHexagons.has(hexIndex)) {  // Only handle click if hexagon hasn't been selected
+      contextHandleClick(row, col, letter, hexIndex);
+      onLetterSelect(letter);
+    }
+  };
+
   return (
     <div className="game-board relative" style={{ width: `${totalWidth}px`, height: '500px', margin: '0 auto' }}>
       {rows.map((row, rowIndex) => {
@@ -28,20 +35,20 @@ const GameBoard = () => {
         const rowOffset = ((maxHexagonsInRow - row.length) * hexagonWidth) / 2;
 
         return row.map((hexIndex, colIndex) => {
-          // Ensure the hexIndex is within the bounds of the board array
-          if (hexIndex >= board.length) {
-            return null; // Skip rendering if the index is out of bounds
+          // Only render if the hexagon exists and hasn't been selected
+          if (hexIndex < board.length && board[hexIndex] !== null && !selectedHexagons.has(hexIndex)) {
+            return (
+              <Hexagon
+                key={hexIndex}
+                letter={board[hexIndex]}
+                onClick={() => handleClick(rowIndex, colIndex, board[hexIndex], hexIndex)}
+                row={rowIndex}
+                col={colIndex}
+                rowOffset={rowOffset}
+              />
+            );
           }
-          return (
-            <Hexagon
-              key={hexIndex}
-              letter={board[hexIndex]}
-              onClick={() => handleHexagonClick(hexIndex)}
-              row={rowIndex}
-              col={colIndex}
-              rowOffset={rowOffset} // Pass the rowOffset to the Hexagon component
-            />
-          );
+          return null;
         });
       })}
     </div>
