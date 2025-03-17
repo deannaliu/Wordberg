@@ -31,7 +31,7 @@ const GameContainer = ({ initialPlayers, setPlayers }) => {
       </div>
 
       {/* Center Content Container */}
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center relative z-10">
         {/* Game Board */}
         <GameBoard 
           players={initialPlayers}
@@ -45,7 +45,7 @@ const GameContainer = ({ initialPlayers, setPlayers }) => {
       </div>
 
       {/* Players' Letters Container - Bottom of page */}
-      <div className="fixed bottom-8 left-0 right-0 flex justify-between px-8">
+      <div className="fixed bottom-8 left-0 right-0 flex justify-between px-8 z-0">
         {/* Player 1 Letters */}
         <div className="flex flex-col items-start gap-2">
           <div className={`text-xl mb-4 ${initialPlayers.player1.isCurrentTurn ? 'text-blue-500 font-bold' : 'text-gray-500'}`}>
