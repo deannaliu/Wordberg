@@ -1,4 +1,8 @@
 import React, { createContext, useState } from 'react';
+import { 
+  processFallingIcebergs, 
+  BOARD_STRUCTURE 
+} from '../utils/icebergPhysics';
 
 // Create the context - using to prevent prop drilling
 export const GameContext = createContext();
@@ -54,28 +58,45 @@ const generateBoard = () => {
 export const GameProvider = ({ children }) => {
   const [board, setBoard] = useState(generateBoard());
   const [selectedHexagons, setSelectedHexagons] = useState(new Set());
+  const [fallingHexagons, setFallingHexagons] = useState(new Set());
+
+  const resetBoard = () => {
+    setBoard(generateBoard());
+    setSelectedHexagons(new Set());
+    setFallingHexagons(new Set());
+  };
 
   const handleHexagonClick = (row, col, letter, index) => {
-    console.log(`Hexagon ${index} clicked with letter ${letter}`);
-    
-    // Mark hexagon as selected
     setSelectedHexagons(prev => {
       const newSelected = new Set(prev);
       newSelected.add(index);
       return newSelected;
     });
 
-    // Update the board
     const newBoard = [...board];
-    newBoard[index] = null; // Use null instead of empty string
+    newBoard[index] = null;
+
+    const fallingIndices = processFallingIcebergs(row, col, newBoard, selectedHexagons);
+    
+    fallingIndices.forEach(idx => {
+      newBoard[idx] = null;
+    });
+    
     setBoard(newBoard);
+    setFallingHexagons(prev => {
+      const newFalling = new Set(prev);
+      fallingIndices.forEach(idx => newFalling.add(idx));
+      return newFalling;
+    });
   };
 
   return (
     <GameContext.Provider value={{ 
       board, 
       handleHexagonClick,
-      selectedHexagons 
+      selectedHexagons,
+      fallingHexagons,
+      resetBoard
     }}>
       {children}
     </GameContext.Provider>

@@ -1,5 +1,6 @@
 import React from 'react';
 import GameBoard from './GameBoard';
+import ResetButton from './ResetButton';
 
 const GameContainer = ({ initialPlayers, setPlayers }) => {
   // handleLetterSelect is used to update the players state with the selected letter and its position
@@ -29,7 +30,7 @@ const GameContainer = ({ initialPlayers, setPlayers }) => {
         <h1 className="text-4xl font-bold text-blue-600">Wordberg</h1>
       </div>
 
-      {/* Player 1 letters - Left side */}
+      {/* Player 1 - Left Side */}
       <div className="fixed left-4 top-8 flex flex-col items-center gap-2">
         <div className={`text-xl mb-4 ${initialPlayers.player1.isCurrentTurn ? 'text-blue-500 font-bold' : 'text-gray-500'}`}>
           {initialPlayers.player1.name}
@@ -46,15 +47,21 @@ const GameContainer = ({ initialPlayers, setPlayers }) => {
         </div>
       </div>
 
-      {/* Game Board - Center */}
-      <div className="flex justify-center mt-16">
+      {/* Center Content Container */}
+      <div className="flex flex-col items-center">
+        {/* Game Board */}
         <GameBoard 
           players={initialPlayers}
           onLetterSelect={handleLetterSelect}
         />
+        
+        {/* Reset Button */}
+        <div className="w-full flex justify-center mt-8">
+          <ResetButton setPlayers={setPlayers} />
+        </div>
       </div>
 
-      {/* Player 2 letters - Right side */}
+      {/* Player 2 - Right Side */}
       <div className="fixed right-4 top-8 flex flex-col items-center gap-2">
         <div className={`text-xl mb-4 ${initialPlayers.player2.isCurrentTurn ? 'text-blue-500 font-bold' : 'text-gray-500'}`}>
           {initialPlayers.player2.name}
@@ -63,7 +70,7 @@ const GameContainer = ({ initialPlayers, setPlayers }) => {
           {initialPlayers.player2.selectedLetters.map((item, index) => (
             <div 
               key={index} 
-              className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold shadow-md"
+              className="bg-pink-100 w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold shadow-md"
             >
               {item.letter}
             </div>
