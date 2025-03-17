@@ -20,7 +20,7 @@ const Hexagon = ({ letter, onClick, row, col }) => {
 
   return (
     <div
-    className={`hexagon ${colorClass} text-black flex items-center justify-center cursor-pointer hover:shadow-md hover:scale-105 hover:text-white transition-all duration-200`}
+      className={`hexagon ${colorClass} text-black flex items-center justify-center cursor-pointer hover:shadow-md hover:scale-105 hover:text-white hover:bg-opacity-50 hover:bg-purple-200 hover:text-shadow transition-all duration-200`}
       style={style}
       onClick={onClick}
     >
