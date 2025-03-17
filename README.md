@@ -18,3 +18,7 @@ npm start (to start the front end)
 ```
 
 Model: https://excalidraw.com/#json=r4u1sL20X4Br8J3X0W7lx,1bOwgUYNPxiO3r6z03lfnQ
+
+todo: 
+- implement 35 sec timer for each player turn
+- implement join room with game code id

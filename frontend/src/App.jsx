@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
+import GameBoard from './components/GameBoard';
 import { GameProvider } from './contexts/GameContext';
 import GameContainer from './components/GameContainer';
+// Temporarily comment out modal imports
+/*
 import GameModeSelect from './components/modals/GameModeSelect';
 import CreateGameModal from './components/modals/CreateGameModal';
 import JoinGameModal from './components/modals/JoinGameModal';
-import { generatePenguinName } from './utils/nameGenerator';
+*/
+
+const generatePenguinName = () => {
+  const adjectives = ['Happy', 'Silly', 'Jumpy', 'Waddles', 'Chilly', 'Frosty', 'Fluffy', 'Snowy'];
+  const nouns = ['Penguin', 'Flipper', 'Iceberg', 'Snowball', 'Fish', 'Diver', 'Swimmer'];
+  return `${adjectives[Math.floor(Math.random() * adjectives.length)]}${nouns[Math.floor(Math.random() * nouns.length)]}`;
+};
 
 const App = () => {
-  const [showModal, setShowModal] = useState(true);
+  // Set showModal to false by default temporarily
+  const [showModal, setShowModal] = useState(false);
   const [gameMode, setGameMode] = useState(null);
   const [roomCode, setRoomCode] = useState(null);
   const [players, setPlayers] = useState({
@@ -26,6 +36,7 @@ const App = () => {
   return (
     <GameProvider>
       <div className="App">
+        {/* Comment out modal section
         {showModal && (
           <div 
             className="fixed inset-0 flex items-center justify-center z-50"
@@ -59,6 +70,7 @@ const App = () => {
             </div>
           </div>
         )}
+        */}
         
         <GameContainer 
           initialPlayers={players}

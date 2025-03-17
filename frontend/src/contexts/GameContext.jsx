@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react';
 
-// Create the context
+// Create the context - using to prevent prop drilling
 export const GameContext = createContext();
 
 // Define letter sets

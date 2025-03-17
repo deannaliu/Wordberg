@@ -2,6 +2,7 @@ import React from 'react';
 import GameBoard from './GameBoard';
 
 const GameContainer = ({ initialPlayers, setPlayers }) => {
+  // handleLetterSelect is used to update the players state with the selected letter and its position
   const handleLetterSelect = (letter, hexIndex) => {
     setPlayers(prev => ({
       player1: {
