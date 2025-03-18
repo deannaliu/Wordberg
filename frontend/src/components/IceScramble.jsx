@@ -35,10 +35,53 @@ const IceScramble = ({ players }) => {
       return false;
     }
   };
+  // Letter point values based on Scrabble scoring
+  const letterValues = {
+    'A': 1, 'B': 3, 'C': 3, 'D': 2, 'E': 1, 'F': 4, 'G': 2, 'H': 4, 'I': 1,
+    'J': 8, 'K': 5, 'L': 1, 'M': 3, 'N': 1, 'O': 1, 'P': 3, 'Q': 10, 'R': 1,
+    'S': 1, 'T': 1, 'U': 1, 'V': 4, 'W': 4, 'X': 8, 'Y': 4, 'Z': 10
+  };
 
-  // Function to calculate word score
+  // Define challenging letter combinations
+  const complexPairs = new Set(['TH', 'CH', 'PH', 'SH', 'WH', 'GH', 'CK', 'DR', 'TR', 'BR', 'FR', 'GR', 'PR', 'ST', 'SP', 'SK']);
+  
+  // Function to calculate word score using Scrabble scoring
   const calculateScore = (word) => {
-    return word.length * 10;
+    const upperWord = word.toUpperCase();
+    let score = upperWord.split('')
+      .reduce((score, letter) => score + (letterValues[letter] || 0), 0);
+    
+    // Check for vowel bonus (if word contains A, E, I, O, U)
+    const vowels = new Set(['A', 'E', 'I', 'O', 'U']);
+    const usedVowels = new Set(upperWord.split('').filter(letter => vowels.has(letter)));
+    if (usedVowels.size === vowels.size) {
+      score += 5; // Bonus for using all vowels
+    }
+
+    // Check for palindrome bonus
+    const isPalindrome = upperWord === upperWord.split('').reverse().join('');
+    if (isPalindrome && upperWord.length > 1) {
+      score += 3; // Bonus for palindrome (only for words longer than 1 letter)
+    }
+
+    // Add length bonus (starting at 4 letters)
+    if (upperWord.length >= 4) {
+      score += upperWord.length - 3; // +1 for 4 letters, +2 for 5 letters, etc.
+    }
+
+    // Bonus for complex letter pairs (TH, CH, etc.)
+    for (let i = 0; i < upperWord.length - 1; i++) {
+      const pair = upperWord.substring(i, i + 2);
+      if (complexPairs.has(pair)) {
+        score += 2; // +2 points per complex pair
+      }
+    }
+
+    // Bonus for consonant clusters (3 or more consonants in a row)
+    const consonantClusters = upperWord.match(/[BCDFGHJKLMNPQRSTVWXZ]{3,}/g) || [];
+    score += consonantClusters.length * 3; // +3 points per consonant cluster
+
+    return score;
   };
 
   // Function to handle word submission
