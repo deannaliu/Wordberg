@@ -14,42 +14,52 @@ const rareLetters = ['Q', 'Z', 'X']; // Rare letters for bonus opportunities
 
 // Function to generate the board
 const generateBoard = () => {
-  const totalHexagons = 24; // Total number of hexagons on the board
-  const minVowels = Math.ceil(totalHexagons * 0.3); // At least 30% vowels
-  const vowelCount = Math.ceil(totalHexagons * 0.4); // 40% vowels
-  const consonantCount = totalHexagons - vowelCount; // 60% consonants
+  const totalHexagons = 24;
+  const vowelCount = Math.ceil(totalHexagons * 0.20); // Reduced to 20% vowels
+  const consonantCount = totalHexagons - vowelCount;
 
-  // Generate vowels
-  const selectedVowels = Array.from({ length: vowelCount }, () => 
-    vowels[Math.floor(Math.random() * vowels.length)]
-  );
+  // Initialize empty board
+  let board = new Array(totalHexagons).fill(null);
 
-  // Generate consonants
-  const selectedConsonants = Array.from({ length: consonantCount }, () => 
-    consonants[Math.floor(Math.random() * consonants.length)]
-  );
+  // Define edge positions (first and last row, first and last column of each row)
+  const edgePositions = new Set([0, 1, 2, 3, 4, 8, 14, 15, 19, 20, 21, 22, 23]);
 
-  // Combine vowels and consonants
-  let board = [...selectedVowels, ...selectedConsonants];
+  // Fill edge positions with consonants
+  edgePositions.forEach(pos => {
+    board[pos] = consonants[Math.floor(Math.random() * consonants.length)];
+  });
 
-  // Ensure at least 30% vowels
-  while (board.filter(letter => vowels.includes(letter)).length < minVowels) {
-    // Replace a consonant with a vowel
-    const consonantIndex = board.findIndex(letter => consonants.includes(letter));
-    if (consonantIndex !== -1) {
-      board[consonantIndex] = vowels[Math.floor(Math.random() * vowels.length)];
+  // Get non-edge positions
+  const nonEdgePositions = Array.from({ length: totalHexagons }, (_, i) => i)
+    .filter(i => !edgePositions.has(i));
+
+  // Place vowels in non-edge positions first
+  let remainingVowels = vowelCount;
+  nonEdgePositions.forEach(pos => {
+    if (remainingVowels > 0) {
+      board[pos] = vowels[Math.floor(Math.random() * vowels.length)];
+      remainingVowels--;
     }
-  }
+  });
+
+  // Fill remaining non-edge positions with consonants
+  nonEdgePositions.forEach(pos => {
+    if (board[pos] === null) {
+      board[pos] = consonants[Math.floor(Math.random() * consonants.length)];
+    }
+  });
 
   // Add rare letters (limit to 1-2 rare letters per board)
-  const rareLetterCount = Math.floor(Math.random() * 2) + 1; 
+  const rareLetterCount = Math.floor(Math.random() * 2) + 1;
   for (let i = 0; i < rareLetterCount; i++) {
-    const randomIndex = Math.floor(Math.random() * totalHexagons);
-    board[randomIndex] = rareLetters[Math.floor(Math.random() * rareLetters.length)];
+    // Place rare letters only on edge positions for extra challenge
+    const availableEdges = Array.from(edgePositions)
+      .filter(pos => !rareLetters.includes(board[pos]));
+    if (availableEdges.length > 0) {
+      const randomEdgePos = availableEdges[Math.floor(Math.random() * availableEdges.length)];
+      board[randomEdgePos] = rareLetters[Math.floor(Math.random() * rareLetters.length)];
+    }
   }
-
-  // Shuffle the board to randomize letter positions
-  board = board.sort(() => Math.random() - 0.5);
 
   return board;
 };
