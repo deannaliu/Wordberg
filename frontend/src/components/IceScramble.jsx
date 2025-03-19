@@ -31,6 +31,9 @@ const IceScramble = ({ players }) => {
   const [timeLeft, setTimeLeft] = useState(25);
   const [isGameOver, setIsGameOver] = useState(false);
 
+  // Add loading state for word submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Timer effect
   useEffect(() => {
     if (timeLeft > 0) {
@@ -103,8 +106,18 @@ const IceScramble = ({ players }) => {
     return score;
   };
 
-  // Function to handle word submission
+  // Improved word submission function
   const handleSubmit = async (player, word, setWord, setMessage) => {
+    // Check if the word has already been used by this player
+    const isDuplicate = wordHistory[player].some(item => 
+      item.word.toLowerCase() === word.toLowerCase()
+    );
+
+    if (isDuplicate) {
+      setMessage('You have already used this word!');
+      return;
+    }
+
     // Get the player's collected letters
     const playerLetters = players[player].selectedLetters.map(item => item.letter);
     
@@ -259,11 +272,13 @@ const IceScramble = ({ players }) => {
               onChange={(e) => handleInputChange(e, setPlayer1Word, player1Word, players.player1.selectedLetters, 'player1')}
               className="flex-1 border p-2 rounded"
               placeholder="Enter a word"
+              disabled={isGameOver || isSubmitting}
             />
             <button
               onClick={() => handleSubmit('player1', player1Word, setPlayer1Word, 
                 (msg) => setMessages(prev => ({ ...prev, player1: msg })))}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isGameOver || isSubmitting}
             >
               Submit
             </button>
@@ -325,11 +340,13 @@ const IceScramble = ({ players }) => {
               onChange={(e) => handleInputChange(e, setPlayer2Word, player2Word, players.player2.selectedLetters, 'player2')}
               className="flex-1 border p-2 rounded"
               placeholder="Enter a word"
+              disabled={isGameOver || isSubmitting}
             />
             <button
               onClick={() => handleSubmit('player2', player2Word, setPlayer2Word,
                 (msg) => setMessages(prev => ({ ...prev, player2: msg })))}
-              className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600"
+              className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isGameOver || isSubmitting}
             >
               Submit
             </button>

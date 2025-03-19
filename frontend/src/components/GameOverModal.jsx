@@ -1,4 +1,6 @@
 import React from 'react';
+import ShareToRedditButton from './ShareToRedditButton';
+import { redditAuth } from '../services/redditAuth';
 
 const GameOverModal = ({ isOpen, players, scores }) => {
   if (!isOpen) return null;
@@ -13,8 +15,11 @@ const GameOverModal = ({ isOpen, players, scores }) => {
     }
   };
 
-  const handleReturn = () => {
-    window.location.reload();
+  const handleShare = () => {
+    if (!redditAuth.isAuthenticated()) {
+      redditAuth.login();
+      return;
+    }
   };
 
   return (
@@ -26,12 +31,19 @@ const GameOverModal = ({ isOpen, players, scores }) => {
           <p className="text-blue-600">{players.player1.name}: {scores.player1}</p>
           <p className="text-pink-600">{players.player2.name}: {scores.player2}</p>
         </div>
-        <button
-          onClick={handleReturn}
-          className="bg-green-500 text-white px-6 py-3 rounded-lg text-xl font-semibold hover:bg-green-600 transition-colors"
-        >
-          Return to Ice Berg
-        </button>
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={() => window.location.reload()}
+            className="bg-green-500 text-white px-6 py-3 rounded-lg text-xl font-semibold hover:bg-green-600 transition-colors"
+          >
+            Play Again
+          </button>
+          <ShareToRedditButton 
+            gameResult={getGameResult()}
+            players={players}
+            scores={scores}
+          />
+        </div>
       </div>
     </div>
   );
