@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import GameOverModal from './GameOverModal';
+import Timer from './Timer';
 
 const IceScramble = ({ players }) => {
   // State for each player's word input
@@ -24,6 +26,23 @@ const IceScramble = ({ players }) => {
     player1: new Set(),
     player2: new Set()
   });
+
+  // Add new state for timer and modal
+  const [timeLeft, setTimeLeft] = useState(25);
+  const [isGameOver, setIsGameOver] = useState(false);
+
+  // Timer effect
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    } else {
+      setIsGameOver(true);
+    }
+  }, [timeLeft]);
 
   // Function to check if a word is valid using the dictionary API
   const checkWord = async (word) => {
@@ -185,8 +204,23 @@ const IceScramble = ({ players }) => {
     }
   };
 
+  // Function to handle game restart
+  const handlePlayAgain = () => {
+    setTimeLeft(25);
+    setIsGameOver(false);
+    setScores({ player1: 0, player2: 0 });
+    setWordHistory({ player1: [], player2: [] });
+    setPlayer1Word('');
+    setPlayer2Word('');
+    setMessages({ player1: '', player2: '' });
+    setUsedLetterIndices({ player1: new Set(), player2: new Set() });
+  };
+
   return (
-    <div className="flex flex-row justify-between items-start gap-8 w-full px-8">
+    <div className="relative flex flex-row justify-between items-start gap-8 w-full px-8">
+      {/* Use the Timer component */}
+      <Timer timeLeft={timeLeft} />
+
       {/* Player 1 Section - Left Side */}
       <div className="flex flex-col items-start gap-4 w-1/2">
         <h2 className="text-2xl font-bold text-blue-600">{players.player1.name}</h2>
@@ -318,6 +352,14 @@ const IceScramble = ({ players }) => {
           </div>
         </div>
       </div>
+
+      {/* Game Over Modal */}
+      <GameOverModal 
+        isOpen={isGameOver}
+        onPlayAgain={handlePlayAgain}
+        players={players}
+        scores={scores}
+      />
     </div>
   );
 };
