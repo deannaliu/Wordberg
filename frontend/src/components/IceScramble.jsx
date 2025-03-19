@@ -115,6 +115,11 @@ const IceScramble = ({ players }) => {
         ...prev,
         [player]: [...prev[player], { word, score }]
       }));
+      // Clear the used letter indices when word is submitted
+      setUsedLetterIndices(prev => ({
+        ...prev,
+        [player]: new Set()
+      }));
       setWord(''); // Clear input after successful submission
     } else {
       setMessage('Not a valid word!');
